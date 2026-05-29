@@ -7,7 +7,5 @@
  * + License: GPL-2.0
  */
 
-\. ./setup-tables.sql
-\. ./setup-functions.sql
-\. ./setup-procedures.sql
-\. ./setup-api.sql
+\. ./table/table_testor_welcome.sql
+\. ./table/table_testor_proxy.sql

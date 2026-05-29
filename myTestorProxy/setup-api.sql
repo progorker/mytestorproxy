@@ -7,7 +7,7 @@
  * + License: GPL-2.0
  */
 
-\. ./setup-tables.sql
-\. ./setup-functions.sql
-\. ./setup-procedures.sql
-\. ./setup-api.sql
+
+\. ./procedure/procedure_api_testor_login.sql
+\. ./procedure/procedure_api_testor_logout.sql
+\. ./procedure/procedure_api_testor_is_online.sql
