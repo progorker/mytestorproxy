@@ -31,7 +31,7 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select case_sql as `case`, test_sql as `test`, message_sql as `message`
+      select case_sql as `case`, test_sql as `test`, replace(message_sql, '__nl__', '\\n') as `message`
         from json_table(
               v_output_json,
               '$.errors[*]' columns(
