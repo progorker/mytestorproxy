@@ -17,9 +17,42 @@ create table testor_welcome (
 
 insert into testor_welcome ( `message` ) values ( 'Welcome to myTestor 0.0.1!' );
 
-insert into testor_welcome ( `message` ) values ( 'There are 3 published API procedures: ' );
+insert into testor_welcome ( `message` ) values ( 'There are 36 published API procedures: ' );
 
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_current_user' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_login' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_logout' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_user_rights' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_create_user' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_change_password' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_suite' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_case' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_suite_case' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_clean' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_test' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_finish' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_result' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_option' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_e_functions' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_e_procedures' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_e_tables' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_version' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_source' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_source_list' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_true' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_true' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_success' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_error' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_equals' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_equals' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_greater_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_greater_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_less_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_less_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_same' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_same' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_contains' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_contains' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_has_right' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_is_online' );
 
