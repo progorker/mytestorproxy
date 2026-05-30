@@ -8,3 +8,4 @@
  */
 
 \. ./function/function_testor_proxy_ready.sql
+\. ./function/function_testor_proxy_quote.sql

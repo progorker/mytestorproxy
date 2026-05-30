@@ -34,3 +34,40 @@ grant execute on procedure mytestorproxy.api_testor_login to 'mytestorproxy'@'lo
 grant execute on procedure mytestorproxy.api_testor_logout to 'mytestorproxy'@'localhost';
 
 grant execute on procedure mytestorproxy.api_testor_is_online to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_has_right to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_current_user to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_user_rights to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_change_password to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_create_user to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_suite to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_case to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_suite_case to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_clean to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_test to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_finish to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_result to 'mytestorproxy'@'localhost';
+
+/*
+grant execute on procedure mytestorproxy.api_testor_option to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_e_functions to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_e_procedures to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_e_tables to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_version to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_source to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_source_list to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_true to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_true to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_success to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_error to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_equals to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_equals to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_greater_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_greater_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_less_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_less_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_same to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_same to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorproxy'@'localhost';
+
+*/
