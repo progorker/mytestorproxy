@@ -22,9 +22,6 @@
 \. ./procedure/procedure_api_testor_test.sql
 \. ./procedure/procedure_api_testor_finish.sql
 \. ./procedure/procedure_api_testor_result.sql
-
-/*
-
 \. ./procedure/procedure_api_testor_option.sql
 \. ./procedure/procedure_api_testor_e_functions.sql
 \. ./procedure/procedure_api_testor_e_procedures.sql
@@ -47,4 +44,3 @@
 \. ./procedure/procedure_api_testor_contains.sql
 \. ./procedure/procedure_api_testor_not_contains.sql
 
-*/

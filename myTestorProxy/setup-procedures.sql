@@ -15,3 +15,4 @@
 \. ./procedure/procedure_testor_proxy_wait.sql
 \. ./procedure/procedure_testor_proxy_get_reply.sql
 \. ./procedure/procedure_testor_proxy_get_request.sql
+\. ./procedure/procedure_testor_proxy_null_if.sql

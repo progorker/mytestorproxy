@@ -92,6 +92,42 @@ function g_process_proxy( $item ) {
     g_api_testor_finish( $proxy_id );
   } else if ( $code === 'api_testor_result' ) {
     g_api_testor_result( $proxy_id );
+  } else if ( $code === 'api_testor_option' ) {
+    g_api_testor_option( $proxy_id );
+  } else if ( $code === 'api_testor_version' ) {
+    g_api_testor_version( $proxy_id );
+  } else if ( $code === 'api_testor_source' ) {
+    g_api_testor_source( $proxy_id );
+  } else if ( $code === 'api_testor_source_list' ) {
+    g_api_testor_source_list( $proxy_id );
+  } else if ( $code === 'api_testor_true' ) {
+    g_api_testor_true( $proxy_id );
+  } else if ( $code === 'api_testor_not_true' ) {
+    g_api_testor_not_true( $proxy_id );
+  } else if ( $code === 'api_testor_success' ) {
+    g_api_testor_success( $proxy_id );
+  } else if ( $code === 'api_testor_error' ) {
+    g_api_testor_error( $proxy_id );
+  } else if ( $code === 'api_testor_equals' ) {
+    g_api_testor_equals( $proxy_id );
+  } else if ( $code === 'api_testor_not_equals' ) {
+    g_api_testor_not_equals( $proxy_id );
+  } else if ( $code === 'api_testor_greater_than' ) {
+    g_api_testor_greater_than( $proxy_id );
+  } else if ( $code === 'api_testor_not_greater_than' ) {
+    g_api_testor_not_greater_than( $proxy_id );
+  } else if ( $code === 'api_testor_less_than' ) {
+    g_api_testor_less_than( $proxy_id );
+  } else if ( $code === 'api_testor_not_less_than' ) {
+    g_api_testor_not_less_than( $proxy_id );
+  } else if ( $code === 'api_testor_same' ) {
+    g_api_testor_same( $proxy_id );
+  } else if ( $code === 'api_testor_not_same' ) {
+    g_api_testor_not_same( $proxy_id );
+  } else if ( $code === 'api_testor_contains' ) {
+    g_api_testor_contains( $proxy_id );
+  } else if ( $code === 'api_testor_not_contains' ) {
+    g_api_testor_not_contains( $proxy_id );
   } else {
     g_delete_proxy( $proxy_id );
   }
@@ -103,6 +139,12 @@ function g_sql_quote( $text ) {
   $text = str_replace( "\n", "\\" . 'n', $text );
   $text = str_replace( "\r", "\\" . 'r', $text );
   $text = str_replace( "\t", "\\" . 't', $text );
+  return $text;
+}
+
+function g_sql_quote_json( $text ) {
+  $text = str_replace( "'", "''", $text );
+  $text = str_replace( '"', "\\" . '"', $text );
   return $text;
 }
 
@@ -389,7 +431,7 @@ function g_api_testor_finish( $proxy_id ) {
     }
   }
   $text = g_sql_quote($text);
-  $json = g_sql_quote( json_encode( $data ) );
+  $json = g_sql_quote( str_replace("\\\\n", "__nl__", json_encode( $data ) ) );
   $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
   g_mytestorproxy_exec( $sql );
 }
@@ -425,9 +467,316 @@ function g_api_testor_result( $proxy_id ) {
     }
   }
   $text = g_sql_quote($text);
+  $json = g_sql_quote( str_replace("\\\\n", "__nl__", json_encode( $data ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_option( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $data = g_sql_quote($obj['data']);
+  $code = g_sql_quote($obj['code']);
+  $remove = g_sql_quote($obj['remove']);
+  if ( $data === 'NULL' || $data === 'null' || $data === '"NULL"' || $data === '"null"' ) {
+    $data = 'NULL';
+  } else {
+    $data = "'$data'";
+  }
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_data = $data; set @v_code = '$code'; set @v_remove = cast('$remove' as signed); call api_testor_option( @v_token, @v_suite_id, @v_data, @v_code, @v_remove ); select @v_data;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $data = $fields[0];
+  $text = g_sql_quote("data: $data\n");
+  $json = g_sql_quote( json_encode( array( 'data' => $data ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_version( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $cur_ver = g_sql_quote($obj['cur_ver']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_cur_ver = cast('$cur_ver' as signed); call api_testor_version( @v_token, @v_suite_id, @v_cur_ver );";
+  $text = g_mytestor_exec($sql);
+  $text = g_sql_quote('');
+  $json = g_sql_quote('{}');
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_source( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_code = g_sql_quote($obj['case_code']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_code = '$case_code'; call api_testor_source( @v_token, @v_suite_id, @v_case_code );";
+  $text = g_mytestor_exec($sql);
+  $data = array( 'kvs' => [] );
+  $lines = explode("\n", $text);
+  foreach ( $lines as $ln ) {
+    $ln = trim($ln);
+    if ( $ln === '' ) continue;
+    $fields = explode("\t", $ln);
+    if ( count( $fields ) === 2 ) {
+      if ( trim( $fields[0] ) === 'Key' ) continue;
+      $it = array( 'key' => $fields[0], 'value' => $fields[1] );
+      array_push( $data['kvs'], $it );
+    }
+  }
+  $text = g_sql_quote($text);
   $json = g_sql_quote( json_encode( $data ) );
   $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
   g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_source_list( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); call api_testor_source_list( @v_token, @v_suite_id );";
+  $text = g_mytestor_exec($sql);
+  $data = array( 'kvs' => [] );
+  $lines = explode("\n", $text);
+  foreach ( $lines as $ln ) {
+    $ln = trim($ln);
+    if ( $ln === '' ) continue;
+    $fields = explode("\t", $ln);
+    if ( count( $fields ) === 4 ) {
+      if ( trim( $fields[0] ) === 'rel_key' ) continue;
+      $it = array( 'rel_key' => $fields[0], 'abs_key' => $fields[1], 'rel_value' => $fields[2], 'abs_value' => $fields[3] );
+      array_push( $data['kvs'], $it );
+    }
+  }
+  $text = g_sql_quote($text);
+  $json = g_sql_quote( json_encode( $data ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_true( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $test_code = g_sql_quote($obj['test_code']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_id = g_sql_quote($obj['case_id']);
+  $condition = g_sql_quote($obj['condition']);
+  $sql = "set @v_token = '$token'; set @v_test_code = '$test_code'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_condition = cast('$condition' as signed); call api_testor_true( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_condition ); select @v_test_id, @v_suite_id, @v_case_id;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $test_id = $fields[0];
+  $suite_id = $fields[1];
+  $case_id = $fields[2];
+  $text = g_sql_quote("test_id: $test_id\nsuite_id: $suite_id\ncase_id: $case_id\n");
+  $json = g_sql_quote( json_encode( array( 'test_id' => $test_id, 'suite_id' => $suite_id, 'case_id' => $case_id ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_not_true( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $test_code = g_sql_quote($obj['test_code']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_id = g_sql_quote($obj['case_id']);
+  $condition = g_sql_quote($obj['condition']);
+  $sql = "set @v_token = '$token'; set @v_test_code = '$test_code'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_condition = cast('$condition' as signed); call api_testor_not_true( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_condition ); select @v_test_id, @v_suite_id, @v_case_id;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $test_id = $fields[0];
+  $suite_id = $fields[1];
+  $case_id = $fields[2];
+  $text = g_sql_quote("test_id: $test_id\nsuite_id: $suite_id\ncase_id: $case_id\n");
+  $json = g_sql_quote( json_encode( array( 'test_id' => $test_id, 'suite_id' => $suite_id, 'case_id' => $case_id ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_success( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); call api_testor_success( @v_token, @v_suite_id );";
+  $text = g_mytestor_exec($sql);
+  $data = array( 'successes' => [] );
+  $lines = explode("\n", $text);
+  foreach ( $lines as $ln ) {
+    $ln = trim($ln);
+    if ( $ln === '' ) continue;
+    $fields = explode("\t", $ln);
+    if ( count( $fields ) === 3 ) {
+      if ( trim( $fields[0] ) === 'case' ) continue;
+      $it = array( 'case' => $fields[0], 'test' => $fields[1], 'message' => $fields[2] );
+      array_push( $data['successes'], $it );
+    }
+  }
+  $text = g_sql_quote($text);
+  $json = g_sql_quote( str_replace("\\\\n", "__nl__", json_encode( $data ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_error( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $test_code = g_sql_quote($obj['test_code']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_id = g_sql_quote($obj['case_id']);
+  $message = g_sql_quote($obj['message']);
+  $sql = "set @v_token = '$token'; set @v_test_code = '$test_code'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_message = '$message'; call api_testor_error( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_message ); select @v_test_id, @v_suite_id, @v_case_id;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $test_id = $fields[0];
+  $suite_id = $fields[1];
+  $case_id = $fields[2];
+  $text = g_sql_quote("test_id: $test_id\nsuite_id: $suite_id\ncase_id: $case_id\n");
+  $json = g_sql_quote( json_encode( array( 'test_id' => $test_id, 'suite_id' => $suite_id, 'case_id' => $case_id ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_number( $proxy_id, $proc ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $test_code = g_sql_quote($obj['test_code']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_id = g_sql_quote($obj['case_id']);
+  $operand = g_sql_quote($obj['operand']);
+  $value = g_sql_quote($obj['value']);
+  $sql = "set @v_token = '$token'; set @v_test_code = '$test_code'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_operand = $operand; set @v_value = $value; call $proc( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_operand, @v_value ); select @v_test_id, @v_suite_id, @v_case_id;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $test_id = $fields[0];
+  $suite_id = $fields[1];
+  $case_id = $fields[2];
+  $text = g_sql_quote("test_id: $test_id\nsuite_id: $suite_id\ncase_id: $case_id\n");
+  $json = g_sql_quote( json_encode( array( 'test_id' => $test_id, 'suite_id' => $suite_id, 'case_id' => $case_id ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_string( $proxy_id, $proc ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $test_code = g_sql_quote($obj['test_code']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $case_id = g_sql_quote($obj['case_id']);
+  $operand = g_sql_quote($obj['operand']);
+  $value = g_sql_quote($obj['value']);
+  $sql = "set @v_token = '$token'; set @v_test_code = '$test_code'; set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_operand = '$operand'; set @v_value = '$value'; call $proc( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_operand, @v_value ); select @v_test_id, @v_suite_id, @v_case_id;";
+  $text = g_mytestor_exec($sql);
+  $lines = explode("\n", $text);
+  $ln = trim($lines[1]);
+  $fields = explode("\t", $ln);
+  $test_id = $fields[0];
+  $suite_id = $fields[1];
+  $case_id = $fields[2];
+  $text = g_sql_quote("test_id: $test_id\nsuite_id: $suite_id\ncase_id: $case_id\n");
+  $json = g_sql_quote( json_encode( array( 'test_id' => $test_id, 'suite_id' => $suite_id, 'case_id' => $case_id ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_equals( $proxy_id ) {
+  $proc = 'api_testor_equals';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_not_equals( $proxy_id ) {
+  $proc = 'api_testor_not_equals';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_greater_than( $proxy_id ) {
+  $proc = 'api_testor_greater_than';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_not_greater_than( $proxy_id ) {
+  $proc = 'api_testor_not_greater_than';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_less_than( $proxy_id ) {
+  $proc = 'api_testor_less_than';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_not_less_than( $proxy_id ) {
+  $proc = 'api_testor_not_less_than';
+  g_api_testor_number( $proxy_id, $proc );
+}
+
+function g_api_testor_same( $proxy_id ) {
+  $proc = 'api_testor_same';
+  g_api_testor_string( $proxy_id, $proc );
+}
+
+function g_api_testor_not_same( $proxy_id ) {
+  $proc = 'api_testor_not_same';
+  g_api_testor_string( $proxy_id, $proc );
+}
+
+function g_api_testor_contains( $proxy_id ) {
+  $proc = 'api_testor_contains';
+  g_api_testor_string( $proxy_id, $proc );
+}
+
+function g_api_testor_not_contains( $proxy_id ) {
+  $proc = 'api_testor_not_contains';
+  g_api_testor_string( $proxy_id, $proc );
 }
 
 function g_halt() {

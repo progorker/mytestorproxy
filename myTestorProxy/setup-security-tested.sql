@@ -29,6 +29,7 @@ grant execute on procedure mytestorproxy.testor_proxy_get_request to 'mytestorch
 grant execute on procedure mytestorproxy.testor_proxy_get_reply to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.testor_proxy_reply to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.testor_proxy_delete to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.testor_proxy_null_if to 'mytestorcheck'@'localhost';
 
 grant execute on procedure mytestorproxy.api_testor_login to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_logout to 'mytestorcheck'@'localhost';
@@ -46,8 +47,6 @@ grant execute on procedure mytestorproxy.api_testor_clean to 'mytestorcheck'@'lo
 grant execute on procedure mytestorproxy.api_testor_test to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_finish to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_result to 'mytestorcheck'@'localhost';
-
-/*
 grant execute on procedure mytestorproxy.api_testor_option to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_e_functions to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_e_procedures to 'mytestorcheck'@'localhost';
@@ -70,4 +69,3 @@ grant execute on procedure mytestorproxy.api_testor_not_same to 'mytestorcheck'@
 grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorcheck'@'localhost';
 
-*/

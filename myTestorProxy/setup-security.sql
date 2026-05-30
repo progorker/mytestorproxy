@@ -29,6 +29,7 @@ grant execute on procedure mytestorproxy.testor_proxy_get_request to 'mytestorpr
 grant execute on procedure mytestorproxy.testor_proxy_get_reply to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.testor_proxy_reply to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.testor_proxy_delete to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.testor_proxy_null_if to 'mytestorproxy'@'localhost';
 
 grant execute on procedure mytestorproxy.api_testor_login to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_logout to 'mytestorproxy'@'localhost';
@@ -46,8 +47,6 @@ grant execute on procedure mytestorproxy.api_testor_clean to 'mytestorproxy'@'lo
 grant execute on procedure mytestorproxy.api_testor_test to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_finish to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_result to 'mytestorproxy'@'localhost';
-
-/*
 grant execute on procedure mytestorproxy.api_testor_option to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_e_functions to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_e_procedures to 'mytestorproxy'@'localhost';
@@ -70,4 +69,3 @@ grant execute on procedure mytestorproxy.api_testor_not_same to 'mytestorproxy'@
 grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorproxy'@'localhost';
 
-*/
