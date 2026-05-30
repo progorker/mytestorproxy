@@ -15,7 +15,11 @@ deterministic
 sql security invoker
 begin
   declare v_output varchar(8192);
-  set v_output = p_input;
+  if p_input is null then
+    set v_output = 'NULL';
+  else
+    set v_output = p_input;
+  end if;
   set v_output = replace( v_output, '''', '''''' );
   set v_output = replace( v_output, '\"', '\\\"' );
   set v_output = replace( v_output, '\n', '\\n' );
