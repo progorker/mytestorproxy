@@ -17,9 +17,7 @@ create procedure testor_proxy_insert (
 )
 sql security invoker
 begin
-  start transaction;
   insert into `testor_proxy` ( `code`, `replied`, `input_json`, `input_text`, `output_json`, `output_text` ) values ( p_code, 0, p_input_json, p_input_text, '{}', '' );
   set p_proxy_id = last_insert_id();
-  commit;
 end;$$
 delimiter ;

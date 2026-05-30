@@ -7,9 +7,11 @@
  * + License: GPL-2.0
  */
 
-drop procedure if exists api_testor_is_online;
+drop procedure if exists api_testor_current_user;
 delimiter $$
-create procedure api_testor_is_online( in p_token varchar(36), out p_result int )
+create procedure api_testor_current_user( 
+  in p_token varchar(36), out p_user_id bigint, out p_username varchar(1024)
+)
 sql security definer
 begin
   declare v_code varchar(640);
@@ -19,11 +21,9 @@ begin
   declare v_output_text longtext;
   declare v_proxy_id bigint;
   declare v_ready int default 0;
-  declare v_result_str varchar(1024);
+  declare v_output varchar(8192);
 
-  set p_result = 0;
-
-  set v_code = 'api_testor_is_online';
+  set v_code = 'api_testor_current_user';
   set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
   set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
 
@@ -32,11 +32,15 @@ begin
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_result_str = json_extract( v_output_json, '$.result' );
-    if v_result_str is not null and v_result_str <> 'NULL' and v_result_str <> '\"NULL\"' then
-      if v_result_str = '1' or v_result_str = '"1"' then
-        set p_result = 1;
-      end if;
+    set v_output = json_extract( v_output_json, '$.username' );
+    if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
+      set v_output = replace( v_output, '\"', '' );
+      set p_username = v_output;
+    end if;
+    set v_output = json_extract( v_output_json, '$.user_id' );
+    if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
+      set v_output = replace( v_output, '\"', '' );
+      set p_user_id = cast( v_output as signed );
     end if;
   end if;
   call testor_proxy_delete( v_proxy_id );

@@ -7,11 +7,9 @@
  * + License: GPL-2.0
  */
 
-drop procedure if exists api_testor_logout;
+drop procedure if exists api_testor_clean;
 delimiter $$
-create procedure api_testor_logout( 
-  in p_token varchar(36)
-)
+create procedure api_testor_clean( in p_token varchar(36), in p_id bigint )
 sql security definer
 begin
   declare v_code varchar(640);
@@ -20,12 +18,12 @@ begin
   declare v_proxy_id bigint;
   declare v_ready int default 0;
 
-  set v_code = 'api_testor_logout';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
+  set v_code = 'api_testor_clean';
+  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', p_id, '\n' );
+  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_id, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
   call testor_proxy_delete( v_proxy_id );
-end;$$
+end$$
 delimiter ;

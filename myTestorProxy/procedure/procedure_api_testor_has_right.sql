@@ -7,9 +7,9 @@
  * + License: GPL-2.0
  */
 
-drop procedure if exists api_testor_is_online;
+drop procedure if exists api_testor_has_right;
 delimiter $$
-create procedure api_testor_is_online( in p_token varchar(36), out p_result int )
+create procedure api_testor_has_right( in p_token varchar(36), in p_right_code varchar(64), out p_result int )
 sql security definer
 begin
   declare v_code varchar(640);
@@ -23,9 +23,9 @@ begin
 
   set p_result = 0;
 
-  set v_code = 'api_testor_is_online';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
+  set v_code = 'api_testor_has_right';
+  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'right_code: ', testor_proxy_quote(p_right_code), '\n' );
+  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "right_code": "', testor_proxy_quote(p_right_code), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );

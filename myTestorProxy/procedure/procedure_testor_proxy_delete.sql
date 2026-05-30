@@ -14,8 +14,6 @@ create procedure testor_proxy_delete (
 )
 sql security definer
 begin
-  start transaction;
   delete from `testor_proxy` where `id` = p_proxy_id;
-  commit;
 end;$$
 delimiter ;
