@@ -496,6 +496,11 @@ function g_api_testor_option( $proxy_id ) {
   $ln = trim($lines[1]);
   $fields = explode("\t", $ln);
   $data = $fields[0];
+  if ( strpos( $code, 'ver:' ) === 0 ) {
+    $data = str_replace( '"', '__dq__', $data . '' );
+    $data = str_replace( ':', '__cl__', $data . '' );
+    $data = str_replace( ':', '__mn__', $data . '' );
+  }
   $text = g_sql_quote("data: $data\n");
   $json = g_sql_quote( json_encode( array( 'data' => $data ) ) );
   $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
