@@ -9,7 +9,7 @@
 
 drop procedure if exists api_testor_success;
 delimiter $$
-create procedure api_testor_success( in p_token varchar(36), in p_suite_id int )
+create procedure api_testor_success( in p_token varchar(36), in p_suite_id int, in p_page_no bigint )
 sql security definer
 begin
   declare v_code varchar(640);
@@ -22,8 +22,8 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_success';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, '}' );
+  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n', 'page_no: ', testor_proxy_quote(p_page_no), '\n' );
+  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, ', "page_no": ', p_page_no, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );

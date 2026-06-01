@@ -7,9 +7,9 @@
  * + License: GPL-2.0
  */
 
-drop procedure if exists api_testor_source_list;
+drop procedure if exists api_testor_failed;
 delimiter $$
-create procedure api_testor_source_list( in p_token varchar(36), in p_suite_id bigint, in p_page_no bigint )
+create procedure api_testor_failed( in p_token varchar(36), in p_suite_id int, in p_page_no bigint )
 sql security definer
 begin
   declare v_code varchar(640);
@@ -21,7 +21,7 @@ begin
   declare v_ready int default 0;
   declare v_output varchar(8192);
 
-  set v_code = 'api_testor_source_list';
+  set v_code = 'api_testor_failed';
   set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n', 'page_no: ', testor_proxy_quote(p_page_no), '\n' );
   set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, ', "page_no": ', p_page_no, '}' );
 
@@ -31,14 +31,13 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select rel_key_sql as `rel_key`, abs_key_sql as `test`, rel_value_sql as `rel_value`, abs_value_sql as `abs_value`
+      select case_sql as `case`, test_sql as `test`, replace(message_sql, '__nl__', '\\n') as `message`
         from json_table(
               v_output_json,
-              '$.kvs[*]' columns(
-                rel_key_sql text path '$.rel_key',
-                abs_key_sql text path '$.abs_key',
-                rel_value_sql text path '$.rel_value',
-                abs_value_sql text path '$.abs_value'
+              '$.faileds[*]' columns(
+                case_sql text path '$.case',
+                test_sql text path '$.test',
+                message_sql text path '$.message'
               )
             ) as jt;
     end if;
