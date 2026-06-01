@@ -57,6 +57,7 @@ grant execute on procedure mytestorproxy.api_testor_source_list to 'mytestorprox
 grant execute on procedure mytestorproxy.api_testor_true to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_not_true to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_success to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_failed to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_error to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_equals to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_not_equals to 'mytestorproxy'@'localhost';

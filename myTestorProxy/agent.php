@@ -39,7 +39,7 @@ function g_mytestor_exec( $sql ) {
 }
 
 function g_proxy_id_list() {
-  $sql = "call testor_proxy_list_requests();";
+  $sql = "call testor_proxy_list_requests(1);";
   $text = g_mytestorproxy_exec( $sql );
   $lines = explode( "\n", $text );
   $result = array();
@@ -106,6 +106,8 @@ function g_process_proxy( $item ) {
     g_api_testor_not_true( $proxy_id );
   } else if ( $code === 'api_testor_success' ) {
     g_api_testor_success( $proxy_id );
+  } else if ( $code === 'api_testor_failed' ) {
+    g_api_testor_failed( $proxy_id );
   } else if ( $code === 'api_testor_error' ) {
     g_api_testor_error( $proxy_id );
   } else if ( $code === 'api_testor_equals' ) {
@@ -554,7 +556,8 @@ function g_api_testor_source_list( $proxy_id ) {
   $obj = json_decode( $json, true );
   $token = g_sql_quote($obj['token']);
   $suite_id = g_sql_quote($obj['suite_id']);
-  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); call api_testor_source_list( @v_token, @v_suite_id );";
+  $page_no = g_sql_quote($obj['page_no']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_page_no = cast('$page_no' as signed); call api_testor_source_list( @v_token, @v_suite_id, @v_page_no );";
   $text = g_mytestor_exec($sql);
   $data = array( 'kvs' => [] );
   $lines = explode("\n", $text);
@@ -632,7 +635,8 @@ function g_api_testor_success( $proxy_id ) {
   $obj = json_decode( $json, true );
   $token = g_sql_quote($obj['token']);
   $suite_id = g_sql_quote($obj['suite_id']);
-  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); call api_testor_success( @v_token, @v_suite_id );";
+  $page_no = g_sql_quote($obj['page_no']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_page_no = cast('$page_no' as signed); call api_testor_success( @v_token, @v_suite_id, @v_page_no );";
   $text = g_mytestor_exec($sql);
   $data = array( 'successes' => [] );
   $lines = explode("\n", $text);
@@ -644,6 +648,35 @@ function g_api_testor_success( $proxy_id ) {
       if ( trim( $fields[0] ) === 'case' ) continue;
       $it = array( 'case' => $fields[0], 'test' => $fields[1], 'message' => $fields[2] );
       array_push( $data['successes'], $it );
+    }
+  }
+  $text = g_sql_quote($text);
+  $json = g_sql_quote( str_replace("\\\\n", "__nl__", json_encode( $data ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
+}
+
+function g_api_testor_failed( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $token = g_sql_quote($obj['token']);
+  $suite_id = g_sql_quote($obj['suite_id']);
+  $page_no = g_sql_quote($obj['page_no']);
+  $sql = "set @v_token = '$token'; set @v_suite_id = cast('$suite_id' as signed); set @v_page_no = cast('$page_no' as signed); call api_testor_failed( @v_token, @v_suite_id, @v_page_no );";
+  $text = g_mytestor_exec($sql);
+  $data = array( 'faileds' => [] );
+  $lines = explode("\n", $text);
+  foreach ( $lines as $ln ) {
+    $ln = trim($ln);
+    if ( $ln === '' ) continue;
+    $fields = explode("\t", $ln);
+    if ( count( $fields ) === 3 ) {
+      if ( trim( $fields[0] ) === 'case' ) continue;
+      $it = array( 'case' => $fields[0], 'test' => $fields[1], 'message' => $fields[2] );
+      array_push( $data['faileds'], $it );
     }
   }
   $text = g_sql_quote($text);

@@ -8,7 +8,7 @@ $g_config = array(
  'mytestorproxy.password' => 'kunqhtsadzmopeh',
  'mytestorproxy.database' => 'mytestorproxy',
 
- 'mytestor.host' => '192.168.124.203',
+ 'mytestor.host' => '192.168.89.203',
  'mytestor.port' => '3306',
  'mytestor.username' => 'mytestor',
  'mytestor.password' => 'kunqhtsadzmopeh',

@@ -32,6 +32,7 @@
 \. ./procedure/procedure_api_testor_true.sql
 \. ./procedure/procedure_api_testor_not_true.sql
 \. ./procedure/procedure_api_testor_success.sql
+\. ./procedure/procedure_api_testor_failed.sql
 \. ./procedure/procedure_api_testor_error.sql
 \. ./procedure/procedure_api_testor_equals.sql
 \. ./procedure/procedure_api_testor_not_equals.sql
