@@ -130,6 +130,8 @@ function g_process_proxy( $item ) {
     g_api_testor_contains( $proxy_id );
   } else if ( $code === 'api_testor_not_contains' ) {
     g_api_testor_not_contains( $proxy_id );
+  } else if ( $code === 'api_testor_man' ) {
+    g_api_testor_man( $proxy_id );
   } else {
     g_delete_proxy( $proxy_id );
   }
@@ -815,6 +817,37 @@ function g_api_testor_contains( $proxy_id ) {
 function g_api_testor_not_contains( $proxy_id ) {
   $proc = 'api_testor_not_contains';
   g_api_testor_string( $proxy_id, $proc );
+}
+
+function g_api_testor_man( $proxy_id ) {
+  $sql = "set @v_json = '{}'; set @v_text = ''; call testor_proxy_get_request($proxy_id, @v_json, @v_text); select @v_json;";
+  $text = g_mytestorproxy_exec($sql);
+  $lines = explode( "\n", $text );
+  $json = trim($lines[1]);
+  $obj = json_decode( $json, true );
+  $module = g_sql_quote($obj['module']);
+  $kind = g_sql_quote($obj['kind']);
+  $code = g_sql_quote($obj['code']);
+  $sql = "set @v_man = ''; call api_testor_man( '$module', '$kind', '$code', @v_man ); select @v_man as manual\\G";
+  $text = g_mytestor_exec($sql);
+  $pos = strpos( $text, 'manual:' );
+  if ( $pos !== false ) {
+    $text = trim( substr( $text, $pos + 7 ) );
+  } else {
+    $text = trim( $text );
+  }
+  $text = "\n" . $text . "\n";
+  $text = str_replace( "\n", "__nl__", $text );
+  $text = str_replace( "\r", "__cr__", $text );
+  $text = str_replace( '"', "__dq__", $text );
+  $text = str_replace( "'", "__sq__", $text );
+  $text = str_replace( "`", "__td__", $text );
+  $text = str_replace( "\\", "__sl__", $text );
+  $man = $text;
+  $text = g_sql_quote( $text );
+  $json = g_sql_quote( json_encode( array( 'man' => $man ) ) );
+  $sql = "set @v_json = '$json'; set @v_text = '$text'; call testor_proxy_reply($proxy_id, @v_json, @v_text);";
+  g_mytestorproxy_exec( $sql );
 }
 
 function g_halt() {
