@@ -17,7 +17,7 @@ create table testor_welcome (
 
 insert into testor_welcome ( `message` ) values ( 'Welcome to myTestor 0.0.1!' );
 
-insert into testor_welcome ( `message` ) values ( 'There are 37 published API procedures: ' );
+insert into testor_welcome ( `message` ) values ( 'There are 38 published API procedures: ' );
 
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_current_user' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_login' );
@@ -56,4 +56,5 @@ insert into testor_welcome ( `message` ) values ( 'proc: api_testor_contains' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_contains' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_has_right' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_is_online' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_man' );
 
