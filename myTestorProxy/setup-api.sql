@@ -45,4 +45,5 @@
 \. ./procedure/procedure_api_testor_contains.sql
 \. ./procedure/procedure_api_testor_not_contains.sql
 \. ./procedure/procedure_api_testor_man.sql
+\. ./procedure/procedure_api_testor_pattern.sql
 

@@ -70,4 +70,6 @@ grant execute on procedure mytestorproxy.api_testor_not_same to 'mytestorcheck'@
 grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_man to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_pattern to 'mytestorcheck'@'localhost';
+
 
