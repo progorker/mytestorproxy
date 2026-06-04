@@ -31,7 +31,7 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select testor_unescape( case_sql ) as `case`, testor_unescape( test_sql ) as `test`, testor_unescape( message_sql ) as `message`
+      select testor_unescape_nocr( case_sql ) as `case`, testor_unescape_nocr( test_sql ) as `test`, testor_unescape_nocr( message_sql ) as `message`
         from json_table(
               testor_unescape( v_output_json ),
               '$.errors[*]' columns(
@@ -40,7 +40,7 @@ begin
                 message_sql text path '$.message'
               )
             ) as jt;
-      select version_sql as `version`, status_sql as `status`, testor_unescape( code_sql ) as `code`, id_sql as `id`, success_count_sql as `success_count`, failed_count_sql as `failed_count`, test_count_sql as `test_count`, case_count_sql as `case_count`
+      select version_sql as `version`, status_sql as `status`, testor_unescape_nocr( code_sql ) as `code`, id_sql as `id`, success_count_sql as `success_count`, failed_count_sql as `failed_count`, test_count_sql as `test_count`, case_count_sql as `case_count`
         from json_table(
               testor_unescape( v_output_json ),
               '$.status[*]' columns(
@@ -54,7 +54,7 @@ begin
                 case_count_sql text path '$.case_count'
               )
             ) as jt;
-      select testor_unescape(reprint_sql) as `To re-print: `, testor_unescape(get_source_sql) as `To get source file of [a] test case: `
+      select testor_unescape_nocr(reprint_sql) as `To re-print: `, testor_unescape_nocr(get_source_sql) as `To get source file of [a] test case: `
         from json_table(
               testor_unescape( v_output_json ),
               '$.hints[*]' columns(

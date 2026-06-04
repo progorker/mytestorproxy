@@ -31,7 +31,7 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select testor_unescape( case_sql ) as `case`, testor_unescape( test_sql ) as `test`, testor_unescape( message_sql ) as `message`
+      select testor_unescape_nocr( case_sql ) as `case`, testor_unescape_nocr( test_sql ) as `test`, testor_unescape_nocr( message_sql ) as `message`
         from json_table(
               testor_unescape( v_output_json ),
               '$.successes[*]' columns(
