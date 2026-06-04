@@ -10,3 +10,4 @@
 \. ./function/function_testor_proxy_ready.sql
 \. ./function/function_testor_escape.sql
 \. ./function/function_testor_unescape.sql
+\. ./function/function_testor_unescape_nocr.sql
