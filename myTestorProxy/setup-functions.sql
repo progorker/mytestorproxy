@@ -8,4 +8,5 @@
  */
 
 \. ./function/function_testor_proxy_ready.sql
-\. ./function/function_testor_proxy_quote.sql
+\. ./function/function_testor_escape.sql
+\. ./function/function_testor_unescape.sql

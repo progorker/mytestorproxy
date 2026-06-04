@@ -7,6 +7,9 @@
  * + License: GPL-2.0
  */
 
+\. ./function/function_api_testor_escape.sql
+\. ./function/function_api_testor_unescape.sql
+
 \. ./procedure/procedure_api_testor_login.sql
 \. ./procedure/procedure_api_testor_logout.sql
 \. ./procedure/procedure_api_testor_is_online.sql

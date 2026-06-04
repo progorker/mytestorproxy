@@ -72,4 +72,6 @@ grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorpro
 grant execute on procedure mytestorproxy.api_testor_man to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_pattern to 'mytestorproxy'@'localhost';
 
+grant execute on function mytestorproxy.api_testor_escape to 'mytestorproxy'@'localhost';
+grant execute on function mytestorproxy.api_testor_unescape to 'mytestorproxy'@'localhost';
 

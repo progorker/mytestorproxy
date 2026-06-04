@@ -25,11 +25,35 @@ function g_mytestorproxy_exec( $sql ) {
   return $text;
 }
 
+function g_escape( $sql ) {
+  $sql = str_replace( "_", "_._us_._", $sql );
+  $sql = str_replace( "\n", "__nl__", $sql );
+  $sql = str_replace( "\r", "__cr__", $sql );
+  $sql = str_replace( "\t", "__tb__", $sql );
+  $sql = str_replace( "\\", "__sl__", $sql );
+  $sql = str_replace( '"', "__dq__", $sql );
+  $sql = str_replace( "'", "__sq__", $sql );
+  $sql = str_replace( "`", "__td__", $sql );
+  return $sql;
+}
+
+function g_unescape( $sql ) {
+  $sql = str_replace( "__nl__", "\n", $sql );
+  $sql = str_replace( "__cr__", "\r", $sql );
+  $sql = str_replace( "__tb__", "\t", $sql );
+  $sql = str_replace( "__sl__", "\\", $sql );
+  $sql = str_replace( "__dq__", '"', $sql );
+  $sql = str_replace( "__sq__", "'", $sql );
+  $sql = str_replace( "__td__", "`", $sql );
+  $sql = str_replace( "_._us_._", "_", $sql );
+  return $sql;
+}
+
 function g_login() {
   global $g_config, $g_token;
-  $username = $g_config['worked.username'];
-  $password = $g_config['worked.password'];
-  $sql = "set @v_token = '_'; set @v_username = '$username'; set @v_password = '$password'; call mytestorproxy.api_testor_login( @v_token, @v_username, @v_password ); select @v_token;";
+  $username = g_escape($g_config['worked.username']);
+  $password = g_escape($g_config['worked.password']);
+  $sql = "set @v_token = '_'; set @v_username = mytestorproxy.api_testor_unescape('$username'); set @v_password = mytestorproxy.api_testor_unescape('$password'); call mytestorproxy.api_testor_login( @v_token, @v_username, @v_password ); select @v_token;";
   $text = g_mytestorproxy_exec( $sql );
   $lines = explode( "\n", $text );
   $g_token = trim( $lines[1] );
@@ -55,8 +79,9 @@ function g_update_cur_ver() {
 
 function g_cur_ver() {
   global $g_config, $g_token;
-  $suite_code = $g_config['worked.suite_code'];
-  $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); set @v_data = NULL; call mytestorproxy.api_testor_option( @v_token, @v_suite_id, @v_data, 'ver:cur', false ); select @v_data;";
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
+  $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); set @v_data = NULL; call mytestorproxy.api_testor_option( @v_token, @v_suite_id, @v_data, 'ver:cur', false ); select @v_data;";
   $text = g_mytestorproxy_exec( $sql );
   $text = trim( $text );
   if ( $text === '' ) return 1;
@@ -78,16 +103,18 @@ function g_halt() {
 
 function g_test_results() {
   global $g_config, $g_token;
-  $suite_code = $g_config['worked.suite_code'];
-  $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); call mytestorproxy.api_testor_result( @v_token, @v_suite_id )\\G";
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
+  $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); call mytestorproxy.api_testor_result( @v_token, @v_suite_id )\\G";
   $text = g_mytestorproxy_exec( $sql );
   return $text;
 }
 
 function g_test_json( $ver ) {
   global $g_config, $g_token;
-  $suite_code = $g_config['worked.suite_code'];
-  $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); set @v_data = NULL; call mytestorproxy.api_testor_option( @v_token, @v_suite_id, @v_data, 'ver:$ver', false ); select @v_data;";
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
+  $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); set @v_data = NULL; call mytestorproxy.api_testor_option( @v_token, @v_suite_id, @v_data, 'ver:$ver', false ); select @v_data;";
   $text = g_mytestorproxy_exec( $sql );
   $text = trim( $text );
   if ( $text === '' ) return false;
@@ -99,9 +126,7 @@ function g_test_json( $ver ) {
   if ( $str[strlen($str) - 1] === '"' ) {
     $str = substr( $str, 0, strlen( $str ) - 1 );
   }
-  $str = str_replace( '__dq__', '"',  $str . '' );
-  $str = str_replace( '__cl__', ':', $str . '' );
-  $str = str_replace( '__mn__', ':', $str . '' );
+  $str = g_unescape( $str );
   $nstr = '';
   $pos = strpos( $str, '"c":"' );
   if ( $pos !== false ) {
@@ -121,11 +146,12 @@ function g_test_json( $ver ) {
 
 function g_test_success() {
   global $g_config, $g_token;
-  $suite_code = $g_config['worked.suite_code'];
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
   $all_text = '';
   $no = 1;
   do {
-    $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); call mytestorproxy.api_testor_success( @v_token, @v_suite_id, $no )\\G";
+    $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); call mytestorproxy.api_testor_success( @v_token, @v_suite_id, $no )\\G";
     $text = g_mytestorproxy_exec( $sql );
     $all_text .= "\n" . $text;
     $no++;
@@ -135,11 +161,12 @@ function g_test_success() {
 
 function g_test_failed() {
   global $g_config, $g_token;
-  $suite_code = $g_config['worked.suite_code'];
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
   $all_text = '';
   $no = 1;
   do {
-    $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); call mytestorproxy.api_testor_failed( @v_token, @v_suite_id, $no )\\G";
+    $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); call mytestorproxy.api_testor_failed( @v_token, @v_suite_id, $no )\\G";
     $text = g_mytestorproxy_exec( $sql );
     $all_text .= "\n" . $text;
     $no++;
@@ -164,7 +191,8 @@ function g_backup_ver( $ver ) {
   global $g_config, $g_token;
   $ver_json = g_test_json( $ver );
   if ( $ver_json === false ) return;
-  $suite_code = $g_config['worked.suite_code'];
+  $token = g_escape($g_token);
+  $suite_code = g_escape($g_config['worked.suite_code']);
   $data_dir = $g_config['data_dir'];
   $dld_dir = $data_dir . '/ver/dld';
   @mkdir( $dld_dir, 0777, true );
@@ -177,7 +205,7 @@ function g_backup_ver( $ver ) {
   $no = 1;
   do {
     $cnt = 0;
-    $sql = "set @v_token = '$g_token'; set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, '$suite_code' ); call mytestorproxy.api_testor_source_list( @v_token, @v_suite_id, $no );";
+    $sql = "set @v_token = mytestorproxy.api_testor_unescape('$token'); set @v_suite_id = -1; call mytestorproxy.api_testor_suite( @v_token, @v_suite_id, mytestorproxy.api_testor_unescape('$suite_code') ); call mytestorproxy.api_testor_source_list( @v_token, @v_suite_id, $no );";
     $text = g_mytestorproxy_exec( $sql );
     if ( trim( $text ) !== '' ) {
       $lines = explode("\n", $text);
