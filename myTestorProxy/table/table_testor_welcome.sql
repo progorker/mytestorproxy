@@ -59,3 +59,8 @@ insert into testor_welcome ( `message` ) values ( 'proc: api_testor_is_online' )
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_man' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_pattern' );
 
+insert into testor_welcome ( `message` ) values ( 'There are 2 published API functions: ' );
+
+insert into testor_welcome ( `message` ) values ( 'func: api_testor_escape' );
+insert into testor_welcome ( `message` ) values ( 'func: api_testor_unescape' );
+
