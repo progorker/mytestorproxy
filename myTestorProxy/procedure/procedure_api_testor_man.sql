@@ -27,24 +27,18 @@ begin
   declare v_output longtext;
 
   set v_code = 'api_testor_man';
-  set v_input_text = concat( 'module: ', testor_proxy_quote(p_module), '\n', 'kind: ', testor_proxy_quote(p_kind), '\n', 'code: ', testor_proxy_quote(p_code), '\n' );
-  set v_input_json = concat( '{"module": "', testor_proxy_quote(p_module), '", "kind": "', testor_proxy_quote(p_kind), '", "code": "', testor_proxy_quote(p_code), '"}' );
+  set v_input_text = concat( 'module: ', testor_escape(p_module), '\n', 'kind: ', testor_escape(p_kind), '\n', 'code: ', testor_escape(p_code), '\n' );
+  set v_input_json = concat( '{"module": "', testor_escape(p_module), '", "kind": "', testor_escape(p_kind), '", "code": "', testor_escape(p_code), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_output = json_extract( v_output_json, '$.man' );
+    set v_output = json_extract( test_unescape(v_output_json), '$.man' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '"', '' );
-      set p_man = v_output;
-      set p_man = replace( p_man, '__nl__', '\n' );
-      set p_man = replace( p_man, '__cr__', '\r' );
-      set p_man = replace( p_man, '__dq__', '"' );
-      set p_man = replace( p_man, '__sq__', '''' );
-      set p_man = replace( p_man, '__td__', '`' );
-      set p_man = replace( p_man, '__sl__', '\\' );
+      set p_man = testor_unescape(v_output);
     end if;
   end if;
   call testor_proxy_delete( v_proxy_id );

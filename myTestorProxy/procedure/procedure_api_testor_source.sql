@@ -22,8 +22,8 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_source';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n', 'case_code: ', testor_proxy_quote(p_case_code), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, ', "case_code": "', testor_proxy_quote(p_case_code), '"}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n', 'suite_id: ', p_suite_id, '\n', 'case_code: ', testor_escape(p_case_code), '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '", "suite_id": ', p_suite_id, ', "case_code": "', testor_escape(p_case_code), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
@@ -31,9 +31,9 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select key_sql as `Key`, value_sql as `Value`
+      select testor_unescape(key_sql) as `Key`, testor_unescape(value_sql) as `Value`
         from json_table(
-              v_output_json,
+              testor_unescape(v_output_json),
               '$.kvs[*]' columns(
                 key_sql text path '$.key',
                 value_sql text path '$.value'

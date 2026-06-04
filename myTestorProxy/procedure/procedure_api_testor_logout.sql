@@ -21,8 +21,8 @@ begin
   declare v_ready int default 0;
 
   set v_code = 'api_testor_logout';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );

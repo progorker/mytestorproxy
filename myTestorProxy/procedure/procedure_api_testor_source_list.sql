@@ -22,8 +22,8 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_source_list';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n', 'page_no: ', testor_proxy_quote(p_page_no), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, ', "page_no": ', p_page_no, '}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n', 'suite_id: ', p_suite_id, '\n', 'page_no: ', p_page_no, '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '", "suite_id": ', p_suite_id, ', "page_no": ', p_page_no, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
@@ -31,9 +31,9 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select rel_key_sql as `rel_key`, abs_key_sql as `test`, rel_value_sql as `rel_value`, abs_value_sql as `abs_value`
+      select testor_unescape(rel_key_sql) as `rel_key`, testor_unescape(abs_key_sql) as `test`, testor_unescape(rel_value_sql) as `rel_value`, testor_unescape(abs_value_sql) as `abs_value`
         from json_table(
-              v_output_json,
+              testor_unescape(v_output_json),
               '$.kvs[*]' columns(
                 rel_key_sql text path '$.rel_key',
                 abs_key_sql text path '$.abs_key',

@@ -28,30 +28,30 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_user_rights';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_output = json_extract( v_output_json, '$.api_call' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.api_call' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '\"', '' );
       set p_api_call = cast( v_output as signed );
     end if;
-    set v_output = json_extract( v_output_json, '$.user_make' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.user_make' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '\"', '' );
       set p_user_make = cast( v_output as signed );
     end if;
-    set v_output = json_extract( v_output_json, '$.user_demo' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.user_demo' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '\"', '' );
       set p_user_demo = cast( v_output as signed );
     end if;
-    set v_output = json_extract( v_output_json, '$.storage_full' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.storage_full' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '\"', '' );
       set p_storage_full = cast( v_output as signed );

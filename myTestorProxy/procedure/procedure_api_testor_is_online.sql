@@ -24,15 +24,15 @@ begin
   set p_result = 0;
 
   set v_code = 'api_testor_is_online';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '"}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '"}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_result_str = json_extract( v_output_json, '$.result' );
+    set v_result_str = json_extract( testor_unescape(v_output_json), '$.result' );
     if v_result_str is not null and v_result_str <> 'NULL' and v_result_str <> '\"NULL\"' then
       if v_result_str = '1' or v_result_str = '"1"' then
         set p_result = 1;

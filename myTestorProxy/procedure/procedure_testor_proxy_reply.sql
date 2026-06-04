@@ -16,6 +16,6 @@ create procedure testor_proxy_reply (
 )
 sql security definer
 begin
-  update `testor_proxy` set `replied` = 1, `output_json` = p_output_json, `output_text` = p_output_text where `id` = p_proxy_id;
+  update `testor_proxy` set `replied` = 1, `output_json` = testor_escape( p_output_json ), `output_text` = testor_escape( p_output_text ) where `id` = p_proxy_id;
 end;$$
 delimiter ;

@@ -22,15 +22,15 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_not_greater_than';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n', 'case_id: ', testor_proxy_quote(p_case_id), '\n', 'test_code: ', testor_proxy_quote(p_code), '\n', 'operand: ', p_operand, '\n', 'value: ', p_value, '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, ', "case_id": ', p_case_id, ', "test_code": "', testor_proxy_quote(p_code), '", "operand": ', p_operand, ', "value": ', p_value, '}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n', 'suite_id: ', p_suite_id, '\n', 'case_id: ', p_case_id, '\n', 'test_code: ', testor_escape(p_code), '\n', 'operand: ', p_operand, '\n', 'value: ', p_value, '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '", "suite_id": ', p_suite_id, ', "case_id": ', p_case_id, ', "test_code": "', testor_escape(p_code), '", "operand": ', p_operand, ', "value": ', p_value, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_output = json_extract( v_output_json, '$.test_id' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.test_id' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '\"', '' );
       set p_id = cast( v_output as signed );

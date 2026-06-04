@@ -22,8 +22,8 @@ begin
   declare v_output varchar(8192);
 
   set v_code = 'api_testor_result';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'suite_id: ', testor_proxy_quote(p_suite_id), '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "suite_id": ', p_suite_id, '}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n', 'suite_id: ', p_suite_id, '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '", "suite_id": ', p_suite_id, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );
@@ -31,18 +31,18 @@ begin
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
     if v_output_json is not null then
-      select case_sql as `case`, test_sql as `test`, replace(message_sql, '__nl__', '\\n') as `message`
+      select testor_unescape( case_sql ) as `case`, testor_unescape( test_sql ) as `test`, testor_unescape( message_sql ) as `message`
         from json_table(
-              v_output_json,
+              testor_unescape( v_output_json ),
               '$.errors[*]' columns(
                 case_sql text path '$.case',
                 test_sql text path '$.test',
                 message_sql text path '$.message'
               )
             ) as jt;
-      select version_sql as `version`, status_sql as `status`, code_sql as `code`, id_sql as `id`, success_count_sql as `success_count`, failed_count_sql as `failed_count`, test_count_sql as `test_count`, case_count_sql as `case_count`
+      select version_sql as `version`, status_sql as `status`, testor_unescape( code_sql ) as `code`, id_sql as `id`, success_count_sql as `success_count`, failed_count_sql as `failed_count`, test_count_sql as `test_count`, case_count_sql as `case_count`
         from json_table(
-              v_output_json,
+              testor_unescape( v_output_json ),
               '$.status[*]' columns(
                 version_sql text path '$.version',
                 status_sql text path '$.status',
@@ -54,9 +54,9 @@ begin
                 case_count_sql text path '$.case_count'
               )
             ) as jt;
-      select reprint_sql as `To re-print: `, get_source_sql as `To get source file of [a] test case: `
+      select testor_unescape(reprint_sql) as `To re-print: `, testor_unescape(get_source_sql) as `To get source file of [a] test case: `
         from json_table(
-              v_output_json,
+              testor_unescape( v_output_json ),
               '$.hints[*]' columns(
                 reprint_sql text path '$.reprint',
                 get_source_sql text path '$.get_source'

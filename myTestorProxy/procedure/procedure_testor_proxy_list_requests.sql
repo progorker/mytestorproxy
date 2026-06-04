@@ -17,6 +17,6 @@ begin
     set p_page_no = 1;
   end if;
   set v_offset = (p_page_no - 1) * 5;
-  select `id` as `proxy_id`, `code` from `testor_proxy` where `replied` = 0 order by `id` asc limit v_offset, 5;
+  select `id` as `proxy_id`, testor_unescape( `code` ) from `testor_proxy` where `replied` = 0 order by `id` asc limit v_offset, 5;
 end;$$
 delimiter ;

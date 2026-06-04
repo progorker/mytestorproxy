@@ -27,8 +27,8 @@ begin
   declare v_ready int default 0;
 
   set v_code = 'api_testor_create_user';
-  set v_input_text = concat( 'token: ', testor_proxy_quote(p_token), '\n', 'username: ', testor_proxy_quote(p_username), '\n', 'password: ', testor_proxy_quote(p_password), '\n', 'api_call: ', p_api_call, '\n', 'user_make: ', p_user_make, '\n', 'user_demo: ', p_user_demo, '\n', 'quota: ', p_quota, '\n' );
-  set v_input_json = concat( '{"token": "', testor_proxy_quote(p_token), '", "username": "', testor_proxy_quote(p_username), '", "password": "', testor_proxy_quote(p_password), '", "api_call": ', p_api_call, ', "user_make": ', p_user_make, ', "user_demo": ', p_user_demo, ', "quota": ', p_quota, '}' );
+  set v_input_text = concat( 'token: ', testor_escape(p_token), '\n', 'username: ', testor_escape(p_username), '\n', 'password: ', testor_escape(p_password), '\n', 'api_call: ', p_api_call, '\n', 'user_make: ', p_user_make, '\n', 'user_demo: ', p_user_demo, '\n', 'quota: ', p_quota, '\n' );
+  set v_input_json = concat( '{"token": "', testor_escape(p_token), '", "username": "', testor_escape(p_username), '", "password": "', testor_escape(p_password), '", "api_call": ', p_api_call, ', "user_make": ', p_user_make, ', "user_demo": ', p_user_demo, ', "quota": ', p_quota, '}' );
 
   call testor_proxy_insert( v_proxy_id, v_code, v_input_json, v_input_text );
   call testor_proxy_wait( v_proxy_id, -1, -1, v_ready );

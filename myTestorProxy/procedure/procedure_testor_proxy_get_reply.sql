@@ -16,7 +16,7 @@ create procedure testor_proxy_get_reply (
 )
 sql security definer
 begin
-  select `output_json`, `output_text` into p_output_json, p_output_text from `testor_proxy` where `id` = p_proxy_id;
+  select testor_unescape( `output_json` ), testor_unescape( `output_text` ) into p_output_json, p_output_text from `testor_proxy` where `id` = p_proxy_id;
   if p_output_json is null then
     set p_output_json = '{}'; 
   end if;
