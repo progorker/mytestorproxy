@@ -17,7 +17,7 @@ create table testor_welcome (
 
 insert into testor_welcome ( `message` ) values ( 'Welcome to myTestor 0.0.1!' );
 
-insert into testor_welcome ( `message` ) values ( 'There are 39 published API procedures: ' );
+insert into testor_welcome ( `message` ) values ( 'There are 49 published API procedures: ' );
 
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_current_user' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_login' );
@@ -58,6 +58,16 @@ insert into testor_welcome ( `message` ) values ( 'proc: api_testor_has_right' )
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_is_online' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_man' );
 insert into testor_welcome ( `message` ) values ( 'proc: api_testor_pattern' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_equals' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_equals' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_greater_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_greater_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_less_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_less_than' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_same' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_same' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_contains' );
+insert into testor_welcome ( `message` ) values ( 'proc: api_testor_not_contains' );
 
 insert into testor_welcome ( `message` ) values ( 'There are 2 published API functions: ' );
 
