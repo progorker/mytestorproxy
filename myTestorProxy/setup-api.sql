@@ -49,4 +49,14 @@
 \. ./procedure/procedure_api_testor_not_contains.sql
 \. ./procedure/procedure_api_testor_man.sql
 \. ./procedure/procedure_api_testor_pattern.sql
+\. ./procedure/procedure_api_testor_cell_equals.sql
+\. ./procedure/procedure_api_testor_cell_not_equals.sql
+\. ./procedure/procedure_api_testor_cell_greater_than.sql
+\. ./procedure/procedure_api_testor_cell_not_greater_than.sql
+\. ./procedure/procedure_api_testor_cell_less_than.sql
+\. ./procedure/procedure_api_testor_cell_not_less_than.sql
+\. ./procedure/procedure_api_testor_cell_same.sql
+\. ./procedure/procedure_api_testor_cell_not_same.sql
+\. ./procedure/procedure_api_testor_cell_contains.sql
+\. ./procedure/procedure_api_testor_cell_not_contains.sql
 

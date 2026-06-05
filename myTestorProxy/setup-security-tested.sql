@@ -18,6 +18,7 @@ create database mytestortested;
 use mytestortested;
 
 grant all privileges on mytestortested.* to 'mytestorcheck'@'localhost';
+grant create temporary tables on mytestortested.* to 'mytestorcheck'@'localhost';
 
 grant select on mytestorproxy.testor_welcome to 'mytestorcheck'@'localhost';
 grant usage on mytestorproxy.testor_welcome to 'mytestorcheck'@'localhost';
@@ -71,6 +72,17 @@ grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorcheck'@
 grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_man to 'mytestorcheck'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_pattern to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_equals to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_equals to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_greater_than to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_greater_than to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_less_than to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_less_than to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_same to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_same to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_contains to 'mytestorcheck'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_contains to 'mytestorcheck'@'localhost';
+
 
 grant execute on function mytestorproxy.api_testor_escape to 'mytestorcheck'@'localhost';
 grant execute on function mytestorproxy.api_testor_unescape to 'mytestorcheck'@'localhost';

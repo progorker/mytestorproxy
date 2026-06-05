@@ -71,6 +71,17 @@ grant execute on procedure mytestorproxy.api_testor_contains to 'mytestorproxy'@
 grant execute on procedure mytestorproxy.api_testor_not_contains to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_man to 'mytestorproxy'@'localhost';
 grant execute on procedure mytestorproxy.api_testor_pattern to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_equals to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_equals to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_greater_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_greater_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_less_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_less_than to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_same to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_same to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_contains to 'mytestorproxy'@'localhost';
+grant execute on procedure mytestorproxy.api_testor_cell_not_contains to 'mytestorproxy'@'localhost';
+
 
 grant execute on function mytestorproxy.api_testor_escape to 'mytestorproxy'@'localhost';
 grant execute on function mytestorproxy.api_testor_unescape to 'mytestorproxy'@'localhost';
