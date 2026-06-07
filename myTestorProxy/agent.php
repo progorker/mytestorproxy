@@ -416,7 +416,6 @@ function g_api_testor_test( $proxy_id ) {
   $case_id = g_sql_quote($obj['case_id']);
   $condition = g_sql_quote($obj['condition']);
   $message = g_sql_quote($obj['message']);
-  file_put_contents( '/bioogr/m.txt', 'Message: ' . $message . '|' );
   $sql = "set @v_token = api_testor_unescape('$token'); set @v_test_code = api_testor_unescape('$test_code'); set @v_suite_id = cast('$suite_id' as signed); set @v_case_id = cast('$case_id' as signed); set @v_condition = cast('$condition' as signed); set @v_message = api_testor_unescape('$message'); call api_testor_test( @v_token, @v_test_id, @v_suite_id, @v_case_id, @v_test_code, @v_condition, @v_message ); select @v_test_id, @v_suite_id, @v_case_id;";
   $text = g_mytestor_exec($sql);
   $lines = explode("\n", $text);
