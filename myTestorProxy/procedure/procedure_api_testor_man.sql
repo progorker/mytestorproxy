@@ -35,7 +35,7 @@ begin
 
   if v_ready = 1 then
     call testor_proxy_get_reply( v_proxy_id, v_output_json, v_output_text );
-    set v_output = json_extract( test_unescape(v_output_json), '$.man' );
+    set v_output = json_extract( testor_unescape(v_output_json), '$.man' );
     if v_output is not null and v_output <> 'NULL' and v_output <> '\"NULL\"' then
       set v_output = replace( v_output, '"', '' );
       set p_man = testor_unescape(v_output);

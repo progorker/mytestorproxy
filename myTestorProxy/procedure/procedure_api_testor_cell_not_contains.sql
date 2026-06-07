@@ -34,14 +34,14 @@ begin
   if @v_value_cell_not_contains is null then
     set @v_value_cell_not_contains = 'NULL';
     set v_success = false;
-    set v_message = concat( '[', p_test_code, '] test (cell_contains) is failed. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
+    set v_message = concat( '[', p_test_code, '] test (cell_not_contains) is failed. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
   else
     if instr( @v_value_cell_not_contains, p_value ) <= 0 then
       set v_success = true;
-      set v_message = concat( '[', p_test_code, '] test (cell_contains) is success. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
+      set v_message = concat( '[', p_test_code, '] test (cell_not_contains) is success. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
     else
       set v_success = false;
-      set v_message = concat( '[', p_test_code, '] test (cell_contains) is failed. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
+      set v_message = concat( '[', p_test_code, '] test (cell_not_contains) is failed. \nOperand: ', @v_value_cell_not_contains, '\nValue: ', p_value, '\n' );
     end if;
   end if;
 
