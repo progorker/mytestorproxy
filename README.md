@@ -47,4 +47,51 @@ $) sudo mysql
 
 $)>source ./setup-security-tested.sql
 
+
+-------|__/-------------------------
+        RUNNING BRIDGE
+------------------------------------
+
+$) export MYTESTORPROXY_DIR=""
+$) nano $MYTESTORPROXY_DIR/config.php
+----> Modify myTestor account, myTestorProxy account and other settings
+$) cd $MYTESTORPROXY_DIR && php ./agent.php
+
+
+-------|__/-------------------------
+        Getting manual page
+------------------------------------
+
+$) export MYTESTORPROXY_DIR=""
+$) export MODULE="mytestor"
+$) export KIND="procedure"
+$) export CODE="api_testor_suite"
+$) cd $MYTESTORPROXY_DIR && php ./man.php $MODULE $KIND $CODE
+
+
+-------|__/-------------------------
+        Getting code pattern
+------------------------------------
+ 
+$) export MYTESTORPROXY_DIR=""
+$) export MODULE="mytestor"
+$) export KIND="procedure"
+$) export CODE="api_testor_suite"
+$) export VARIANT="scrp"
+$) cd $MYTESTORPROXY_DIR && php ./pattern.php $MODULE $KIND $CODE $VARIANT
+
+
+-------|__/-------------------------
+    Controlling source versions
+------------------------------------
+
+$) export MYTESTORPROXY_DIR=""
+$) export PHP_WORKED_DIR=""
+$) cp -f $MYTESTORPROXY_DIR/svc.php $PHP_WORKED_DIR/
+$) cp -f $MYTESTORPROXY_DIR/svc-cfg.php $PHP_WORKED_DIR/
+$) nano $MYTESTORPROXY_DIR/svc-cfg.php
+---> Modify myTestorProxy account and other settings
+$) cd $PHP_WORKED_DIR && php ./svc.php
+
+
 ```
