@@ -21,9 +21,9 @@
 
 $) cd __WORK_DIR__
 
-$) git clone https://github.com/progorker/mytestorproxy.git
+$) git clone https://github.com/progorker/mytestor-proxy.git
 
-$) cd mytestorproxy/myTestorProxy
+$) cd mytestor-proxy/myTestorProxy
 
 $) sudo mysql
 
